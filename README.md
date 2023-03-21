@@ -1,6 +1,10 @@
-# bilingual_jupyter_notebook
+# Bilingual Notebook
 
-translate, display markdown cells, deployed with @streamlit
+Translate & display markdown cells, deployed with @streamlit
+
+Developed @Heywhale 🐳, a promising startup and a provider of Machine-Learning Ops solution
+
+Special thanks to @nano for inspiration ✨ and @EY for debugging 🐞
 
 **inspired by:**:
 
