@@ -3,7 +3,7 @@ import time
 import requests
 import deepl
 
-from utils.language_dict import LANGUAGES,TO_LANGUAGE_CODE,standardize_language_string
+from constants.languages import LANGUAGES,TO_LANGUAGE_CODE,standardize_language_string
 from .base_translator import baseTranslator
 
 class DeepL(baseTranslator):
@@ -21,16 +21,12 @@ class DeepL(baseTranslator):
         #     "X-RapidAPI-Key": "",
         #     "X-RapidAPI-Host": "deepl-translator.p.rapidapi.com",
         # }
-        # print('FLAG REVERSE SET:',standardize_language_string(source_language.lower(),reverse=True))
-        self.source_language = standardize_language_string(source_language.lower(),reverse=True)
-        self.target_language = standardize_language_string(target_language.lower(),reverse=True)
+        self.source_language = standardize_language_string(source_language.lower(),reverse=True).upper()
+        self.target_language = standardize_language_string(target_language.lower(),reverse=True).upper()
         self.active_key = ''
 
-        # if self.source_language == 'en':
-        #     self.source_language = 'en-US'
-
-        # if self.target_language == 'en':
-        #     self.target_language = 'en-US'
+        if self.target_language == 'EN':
+            self.target_language = 'EN-US'
 
         # if self.source_language not in [
         #     "bg",
@@ -78,14 +74,15 @@ class DeepL(baseTranslator):
         
         translator = deepl.Translator(self.active_key)
 
-
         try:
             response = translator.translate_text(text,source_lang=self.source_language,target_lang=self.target_language,tag_handling='xml', ignore_tags=['x'])
+
         except Exception as e:
             # print(str(e))
             time.sleep(20)
+            print('FLAG SELF SOURCE LANG:',self.source_language)
+
             response = translator.translate_text(text,source_lang=self.source_language,target_lang=self.target_language,tag_handling='xml', ignore_tags=['x'])
 
         t_text = response.text
-        # print(response.text)
         return t_text

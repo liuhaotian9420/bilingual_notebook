@@ -3,130 +3,119 @@ import time
 import json
 import os
 
-# from streamlit import SessionState
 from apps.notebook import Notebook
 from io import StringIO
 from apps.main import markdown_line_translate,get_model
+# from apps.streamlit.callback import start_translation
 from utils.notebook_parser import skippers
-
-# Title and info panel for bilignual jupternotebook
-
-from utils.language_dict import LANGUAGES, TO_LANGUAGE_CODE
-
-
-ALL_LANGUAGES = [k.capitalize() for k in list(TO_LANGUAGE_CODE.keys())]
-
-if 'is_processing' not in st.session_state:
-
-    st.session_state['is_processing'] = False
-
-st.cache_data.clear()
-
-st.title("Bilingual Jupyter Notebook :ringed_planet:")
-st.info('''
-    QUality of translation might not be perfect and proofreading is recommended
-
-    Translation speed is determined by:
-
-    1. Lines of markdown cell
-
-    2. Words in each line
-
-    Powerd by OpenAI GPT-3.5 Turbo
-
-''')
+from constants.languages import TO_LANGUAGE_CODE, LANGUAGES
+from constants.interface import *
+from constants.interface import WidgetText as wt
 
 
-nb_loader = st.container()
-nb_loader.empty()
+# Widgets are placed in a container
+# So all major blocks should be of container type
 
-file = nb_loader.file_uploader("上传你的 Jupyter Notebook 文件", type=".ipynb",help="请确保上传的是合法的 ipynb 文件")
+ALL_LANGUAGES = [k.title() for k in list(TO_LANGUAGE_CODE.keys())]
+
+############################ UI ####################################
+introduction = st.container()
+introduction.title(PAGE_TITLE[wt.LABEL.value])
+introduction.info(PAGE_MAJOR_INFO[wt.LABEL.value])
+nb_uploader = st.container()
+file = nb_uploader.file_uploader(NOTEBOOK_UPLOADER[wt.LABEL.value], type=".ipynb",help=NOTEBOOK_UPLOADER[wt.HELP.value])
+inputs = st.container()
+translator_model, key_input = inputs.columns(2)
+model = translator_model.selectbox(MODEL_SELECTION_BOX[wt.LABEL.value],options=['deepl','gpt-3.5'],help=MODEL_SELECTION_BOX[wt.HELP.value])
+key   = key_input.text_input(API_KEY_INPUT_BOX[wt.LABEL.value].format(translator_model=model),type='password')
+more_options = st.container()
+if more_options.checkbox(MORE_OPTIONS_SHOW_BUTTON[wt.LABEL.value]):
+    
+    src_language,trgt_language = more_options.columns(2)
+    source_language=src_language.selectbox(SOURCE_LANGUAE_SELECTION_BOX[wt.LABEL.value],ALL_LANGUAGES).lower()
+    target_language=trgt_language.selectbox(TARGET_LANGUAE_SELECTION_BOX[wt.LABEL.value],ALL_LANGUAGES).lower()
+else:
+    source_language= 'english'
+    target_language= 'simplified chinese'
+logging = st.container()
+progress = st.container()
+buttons = st.container()
+
+translate, download = buttons.columns(2)
+dummy = download.empty()
+dummy_download = dummy.download_button(DUMMY_DOWNLOAD_BUTTON[wt.LABEL.value],
+                              mime="application/ipynb",
+                              data = '',
+                              disabled=True,
+                              key= DUMMY_DOWNLOAD_BUTTON[wt.ID.value],
+                              help= DUMMY_DOWNLOAD_BUTTON[wt.HELP.value],)
+
+w1,w2 = translate.columns([2,1])
+translate_button = w2.button(
+                             TRANSLATE_BUTTON[wt.LABEL.value], 
+                            #  on_click=start_translation, 
+                            #  args=(logging,),
+                            #  kwargs = {
+                            #     "source_language":source_language,
+                            #     "target_language":target_language,
+                            #     "model":model,
+                            #  }
+                             )
+
+############################ Scripts ####################################
+
 
 nb = None
-
 if file:
     nb_json = file.getvalue().decode("utf-8")
     nb = Notebook()
     nb.loads(nb_json)
-    st.session_state['is_processing'] = True
-    # st.write('After:',id(nb),str(len(nb.get_markdown())))
-    md_counts= len(nb.get_markdown())
-    
-
-
-# 翻译相关
-
-translator_model, key_input = st.columns(2)
-
-model = translator_model.selectbox("选择使用的模型",options=['gpt-3.5','deepl'])
-# translator_model.session_state['model'] = 'gpt-3.5'
-
-if model is not None:
-    
-    key = key_input.text_input("输入你的 Key",type='password')
-
-if st.checkbox('Additional Options'):
-
-    src_language,trgt_language = st.columns(2)
-    source_language=src_language.selectbox("Source Language",ALL_LANGUAGES).lower()
-    target_language=trgt_language.selectbox("Target Language",ALL_LANGUAGES).lower()
-
-else:
-
-    source_language= 'english'
-    target_language= 'simplified chinese'
-
-info_container = st.container()
-pbar_container = st.container()
-start, downloads = st.columns(2)
-dl = downloads.empty()
-
-download = dl.download_button(label="Download",
-                              data='some text to be downloaded',
-                              file_name='a sample_name', 
-                              mime="application/ipynb",
-                              disabled=True,
-                              key = 'the dummy download button')
-
-w1,w2 = start.columns([2,1])
-
-
-
-
-
-
-def start_translation(nb,model,source_language, target_language):
-
-    info_container.write('正在将 Jupyter Notebook 从 '+source_language+' 转为 '+target_language+' 。')
-    info_container.write('使用'+model+'模型')
-    info_container.write('计算当前 Markdown 大小...')
-    time.sleep(2)
-    info_container.write('当前 Notebook 共有 '+ str(len(nb.get_markdown()))+' 个 markdown cell，总计 '+str(nb.line_counter)+' 行')
-    info_container.write('开始翻译')
-
-
-translate_button = w2.button("Translate", on_click=start_translation, args=(nb, model, source_language, target_language ))
+    md_counts = str(len(nb.get_markdown()))
+    line_counts = str(nb.line_counter)
 
 translator_model = get_model(model,key,source_language,target_language)
 
+if not file and translate_button:
 
-if translate_button:
+    logging.error(DISPLAYED_TEXT_WHEN_INIT_TRANSLATING[wt.ERROR.value]['ipynb_not_found'],icon = '🔥')
 
-    progress_bar  = pbar_container.progress(0,text='正在翻译中,请稍后')
+if not key and translate_button:
+
+    logging.error(DISPLAYED_TEXT_WHEN_INIT_TRANSLATING[wt.ERROR.value]['key_not_found'],icon = '🔑')
+
+
+
+if file and translate_button:
+
+    logging.write(DISPLAYED_TEXT_WHEN_INIT_TRANSLATING[wt.LABEL.value].format(source_language=source_language, 
+                                                                              target_language=target_language))
+    logging.write(DISPLAYED_TEXT_WHEN_INIT_TRANSLATING[wt.HELP.value].format(model_name=model))
+    logging.write(DISPLAYED_TEXT_WHEN_COMPUTING_MD_META[wt.LABEL.value])
+    time.sleep(2)
+    logging.write(DISPLAYED_TEXT_WHEN_COMPUTING_MD_META[wt.SUCCESS.value].format(markdown_counts=md_counts,line_counts=line_counts))
+    logging.write(DISPLAYED_TEXT_WHEN_INIT_TRANSLATING[wt.SUCCESS.value])
     
+    progress_bar  = progress.progress(0,text=TRANSLATE_PROGRESS_BAR[wt.LABEL.value])
     counter = 0 
 
     for idx, md in nb.get_markdown():
 
-        st.write(len(md['source']))
         nb.set_cell((idx, markdown_line_translate(md['source'],translator_model)))
         counter+= len(md['source'])
-        progress_bar.progress(int(counter/nb.line_counter*100), text='正在翻译中，已翻译'+str(int(counter/nb.line_counter*100))+'% 的行数')
+        lines_translated = int(counter/nb.line_counter*100)
+        progress_bar.progress(int(counter/nb.line_counter*100), 
+                              text= TRANSLATE_PROGRESS_BAR[wt.LOG.value].format(lines_translated=str(lines_translated)))
 
-    dl.empty()
-    
+
     translated_notebook = nb.reconstruct()
+    dummy.empty()
 
-    st.session_state['is_processing'] = False
+    # 更新下载按钮
 
-    download1 = dl.download_button(key = 'the real one',label="Download", data=json.dumps(translated_notebook), file_name='a sample_name.ipynb', mime="application/ipynb",disabled=False)
+    file_name = '[{language_code}]'.format(language_code=TO_LANGUAGE_CODE.get(target_language))+file.name
+    active_download = download.download_button(key=ACTIVE_DOWNLOAD_BUTTON[wt.ID.value],
+                                               label=ACTIVE_DOWNLOAD_BUTTON[wt.LABEL.value], 
+                                               data=json.dumps(translated_notebook), 
+                                               file_name=file_name, 
+                                               mime="application/ipynb",
+                                               disabled=False,)
