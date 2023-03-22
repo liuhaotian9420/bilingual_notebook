@@ -79,15 +79,7 @@ PAGE_TITLE = {
 
 PAGE_MAJOR_INFO = {
     WidgetText.LABEL.value:'''
-    QUality of translation might not be perfect and proofreading is recommended
-
-    Translation speed is determined by:
-
-    1. Lines of markdown cell
-
-    2. Words in each line
-
-    Powerd by OpenAI GPT-3.5 Turbo
+    文本的翻译质量比较依赖不同的翻译模型质量，强烈建议下载后进行二次校对
 
 ''',
 }

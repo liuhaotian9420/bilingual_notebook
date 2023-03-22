@@ -83,9 +83,7 @@ if not key and translate_button:
 
     logging.error(DISPLAYED_TEXT_WHEN_INIT_TRANSLATING[wt.ERROR.value]['key_not_found'],icon = '🔑')
 
-
-
-if file and translate_button:
+if key and file and translate_button:
 
     logging.write(DISPLAYED_TEXT_WHEN_INIT_TRANSLATING[wt.LABEL.value].format(source_language=source_language, 
                                                                               target_language=target_language))
