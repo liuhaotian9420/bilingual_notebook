@@ -93,8 +93,6 @@ class Notebook():
         cell_value = cell[1]
         self.cells[cell_index]['source'] = cell_value
 
-
-
     def reconstruct(self):
 
         '''
@@ -104,5 +102,7 @@ class Notebook():
         nb = {}
         nb['metadata'] = self.meta
         nb['cells'] = self.cells
+        nb['nbformat'] = 4
+        nb['nbformat_minor']=0
 
         return nb

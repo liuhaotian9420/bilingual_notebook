@@ -1,22 +1,8 @@
-import os
 import itertools
-import sys
-import json
-import numpy as np
-import pandas as pd
-import functools
 import re
-import gc
-from collections import Counter, defaultdict
 
 
 tc = itertools.cycle(['<x>','</x>'])
-
-def pop_code(match):
-
-    return next(tc)
-
-
 
 compilers = {
 
@@ -41,7 +27,9 @@ compilers = {
 skippers = ['\n','$$','$','$\n','$$\n']
 
 
-# print(re.sub('<x>|</x>','`','<x>sadasdsadad</x>sdsds'))
+def pop_code(match):
+
+    return next(tc)
 
 def parse_comment(text:list[str], comment_type:str ='ns'):
 
