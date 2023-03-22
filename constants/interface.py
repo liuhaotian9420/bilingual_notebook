@@ -17,8 +17,9 @@ class WidgetText(Enum):
     ERROR = 5
     OUTPUT = 6
     LOG = 7
+    EXAMPLE = 8
 
-############################ 参数输入 ####################################
+############################ 输入 ####################################
 
 NOTEBOOK_UPLOADER = {
     WidgetText.ID.value:'nb_uploader',
@@ -47,8 +48,47 @@ TARGET_LANGUAE_SELECTION_BOX = {
     WidgetText.LABEL.value:"目标语言",
 }
 
-############################ 核心功能 ####################################
+############################ 功能 ####################################
 
+ADD_GLOSSARY_SHOW_BUTTON = {
+    WidgetText.ID.value:'add_glossary_show_button',
+    WidgetText.LABEL.value:"自定义字典管理",
+}
+
+GLOSSARY_UPLOADER = {
+    WidgetText.ID.value:"glossary_uploader",
+    WidgetText.LABEL.value:"上传你的自定义字典(.txt)",
+    WidgetText.HELP.value:"请确保上传的 txt 文件为合法文件",
+    WidgetText.SUCCESS.value:"自定义字典上传成功",
+    WidgetText.ERROR.value:"自定义字典上传失败",
+
+}
+
+GLOSSARY_TEMPLATE_DOWNLOAD_BUTTON = {
+    WidgetText.ID.value:'glossary_template_download_button',
+    WidgetText.LABEL.value:"字典模板",
+    WidgetText.HELP.value:"",
+    WidgetText.SUCCESS.value:"自定义字典模板下载成功",
+    WidgetText.ERROR.value:"自定义字典模板下载失败",
+}
+
+GLOSSARY_FULL_DOWNLOAD_BUTTON = {
+    WidgetText.ID.value:'glossary_full_download_button',
+    WidgetText.LABEL.value:"当前字典",
+    WidgetText.HELP.value:"",
+    WidgetText.SUCCESS.value:"自定义字典全量下载成功",
+    WidgetText.ERROR.value:"自定义字典全量下载失败",
+}
+
+GLOSSARY_SEARCH_INPUT = {
+    WidgetText.ID.value:"glossary_search_input",
+    WidgetText.LABEL.value:"搜索已有关键字",
+    WidgetText.HELP.value:"每个关键字只有一个对应语言下的翻译",
+    WidgetText.SUCCESS.value:"搜索成功",
+    WidgetText.ERROR.value:"搜索失败",
+    WidgetText.EXAMPLE.value:"例如: hello",
+
+}
 
 
 TRANSLATE_BUTTON = {
