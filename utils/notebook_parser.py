@@ -31,7 +31,7 @@ def pop_code(match):
 
     return next(tc)
 
-def parse_comment(text:list[str], comment_type:str ='ns'):
+def parse_comment(text:list, comment_type:str ='ns'):
 
     '''
     text:
