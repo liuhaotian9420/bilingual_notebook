@@ -7,24 +7,6 @@ from apps.main import get_model,markdown_line_translate
 from apps.notebook import Notebook
 
 
-def InitializeState(session_state,):
-
-    session_state['activate_download_button'] = False
-    session_state['cached_results'] = None
-
-    if session_state.get('source_language_select_status') is None:
-        
-        session_state['source_language_select_status'] = SelectionStatus.DEFAULT.value
-
-
-    if session_state.get('target_language_select_status') is None:
-        
-        session_state['target_language_select_status'] = SelectionStatus.DEFAULT.value
-
-
-    if session_state.get('model_selection_status') is None:
-        
-        session_state['model_selection_status'] = SelectionStatus.DEFAULT.value
 
 
 def TranslationProgressing(model,notebook,progress_bar):
@@ -54,8 +36,16 @@ def UploadNotebook(session_state,wid:str):
     wid: string, 当前 widget 的id
     '''
     current_status = session_state.get('notebook_upload_status') 
+    st.write(session_state.get('notebook_upload_status'))
 
-    if (current_status is not None) and (current_status != UploadStatus.EXISITING.value):
+    if not session_state[wid] and current_status is not None:
+
+        session_state['notebook_upload_status'] = UploadStatus.EMPTY.value
+
+        return
+
+
+    if (current_status is not None) and (current_status == UploadStatus.EXISITING.value):
         
         st.error(NOTEBOOK_UPLOAD_STATUS[wt.WARNING.value]+': '+session_state[wid].name)
         
@@ -67,13 +57,10 @@ def UploadNotebook(session_state,wid:str):
         nb_json = notebook_file.getvalue().decode("utf-8")
         nb = Notebook()
         nb.loads(nb_json)
-        session_state['notebook_upload_status'] = UploadStatus.EXISITING.value 
+        session_state['notebook_upload_status'] = UploadStatus.EXISITING.value
+         
         session_state['notebook'] = nb
-        # st.write(session_state['notebook_upload_status'])
-        # md_counts = str(len(nb.get_markdown()))
-        # line_counts = str(nb.line_counter)
-
-        # nb,{'md_counts': md_counts, 'line_counts':line_counts}
+        st.write(session_state['notebook_upload_status'])
 
     except:
     
@@ -140,6 +127,7 @@ def ClickTranslate(session_state,logger,progress):
 
     # st.write('Entering the translating button: ',st.session_state['activate_download_button'])
 
+    st.write(session_state['notebook_upload_status'])
 
     if session_state['notebook_upload_status'] != UploadStatus.EXISITING.value:
 
@@ -199,6 +187,7 @@ def ClickTranslate(session_state,logger,progress):
     notebook = TranslationProgressing(model,session_state['notebook'],progress_bar).reconstruct()
     
     session_state.activate_download_button = True
+    session_state.runs = True
     # st.write('FLAG:IN CALLBACKS')
     # st.write('Exiting the translating button: ',st.session_state['activate_download_button'])
     session_state.cached_results = notebook

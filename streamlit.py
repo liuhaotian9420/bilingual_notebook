@@ -5,7 +5,7 @@ from scripts.callbacks import *
 from constants.languages import TO_LANGUAGE_CODE
 from constants.interface import *
 from constants.interface import WidgetText as wt
-
+from scripts.initialization import InitializeState
 
 
 InitializeState(st.session_state)
@@ -16,9 +16,13 @@ InitializeState(st.session_state)
 ALL_LANGUAGES = [k.title() for k in list(TO_LANGUAGE_CODE.keys())]
 
 ############################ UI ####################################
+
 introduction = st.container()
 introduction.title(PAGE_TITLE[wt.LABEL.value])
 introduction.info(PAGE_MAJOR_INFO[wt.LABEL.value])
+
+
+# 上传 Notebook
 nb_uploader = st.container()
 file = nb_uploader.file_uploader(NOTEBOOK_UPLOADER[wt.LABEL.value], 
                                  type=".ipynb",
@@ -31,6 +35,8 @@ file = nb_uploader.file_uploader(NOTEBOOK_UPLOADER[wt.LABEL.value],
 
 inputs = st.container()
 translator_model, key_input = inputs.columns(2)
+
+# 选择翻译模型
 model = translator_model.selectbox(
                                     MODEL_SELECTION_BOX[wt.LABEL.value],
                                     options=['deepl','gpt-3.5'],
@@ -39,14 +45,15 @@ model = translator_model.selectbox(
                                     on_change=ModelSelection,
                                     args=(st.session_state,MODEL_SELECTION_BOX[wt.ID.value],),
                                     )
-
+# 输入API-Key
 key = key_input.text_input(API_KEY_INPUT_BOX[wt.LABEL.value].format(translator_model=model),
                              key=API_KEY_INPUT_BOX[wt.ID.value],
                              type='password',
                              on_change=APIKeyInput,
                              args=(st.session_state,API_KEY_INPUT_BOX[wt.ID.value],),)
-more_options = st.container()
 
+# 更多选项                             
+more_options = st.container()
 if more_options.checkbox(MORE_OPTIONS_SHOW_BUTTON[wt.LABEL.value]):
     
     src_language,trgt_language = more_options.columns(2)
@@ -65,17 +72,21 @@ if more_options.checkbox(MORE_OPTIONS_SHOW_BUTTON[wt.LABEL.value]):
                                             kwargs={'is_source':False}
                                             ).lower()
     
-
+# Logging
 logging = st.container()
 logging.empty()
+# 进度条
 progress = st.container()
 progress.empty()
+
+
 buttons = st.container()
 translate, download = buttons.columns(2)
 dummy = download.empty()
-
 w1,w2 = translate.columns([2,1])
 
+
+# 下载按钮
 if not st.session_state['activate_download_button']:
 
     dummy_download = dummy.download_button(DUMMY_DOWNLOAD_BUTTON[wt.LABEL.value],
@@ -84,13 +95,14 @@ if not st.session_state['activate_download_button']:
                                 disabled=True,
                                 key= DUMMY_DOWNLOAD_BUTTON[wt.ID.value],
                                 help= DUMMY_DOWNLOAD_BUTTON[wt.HELP.value],)
-
+# 翻译按钮
 translate_button = w2.button(
                              TRANSLATE_BUTTON[wt.LABEL.value], 
                              on_click=ClickTranslate, 
                              args=(st.session_state,logging,progress,),
                              )
-if translate_button:
+
+if translate_button and st.session_state['runs']:
     
     dummy.empty()
     file_name = '[{language_code}]'.format(language_code=TO_LANGUAGE_CODE.get(target_language))+file.name
