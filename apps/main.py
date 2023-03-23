@@ -21,7 +21,7 @@ def tag_mask(md:str):
 
     return re.sub(compilers['code'],pop_code,md)
 
-def markdown_line_translate(md:list[str],model):
+def markdown_line_translate(md:list,model):
 
     bilingual_mds = []
 
