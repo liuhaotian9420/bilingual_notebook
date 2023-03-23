@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-from scripts.constants.constants import *
+from frontend.constants.constants import *
 from constants.interface import WidgetText as wt
 from apps.main import get_model,markdown_line_translate
 from apps.notebook import Notebook

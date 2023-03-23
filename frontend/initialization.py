@@ -1,4 +1,4 @@
-from scripts.constants.constants import *
+from frontend.constants.constants import *
 
 def InitializeState(session_state,):
 

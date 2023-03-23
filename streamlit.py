@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 
-from scripts.callbacks import *
+from frontend.callbacks import *
 from constants.languages import TO_LANGUAGE_CODE
 from constants.interface import *
 from constants.interface import WidgetText as wt
