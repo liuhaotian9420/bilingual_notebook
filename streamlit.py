@@ -5,7 +5,7 @@ from scripts.callbacks import *
 from constants.languages import TO_LANGUAGE_CODE
 from constants.interface import *
 from constants.interface import WidgetText as wt
-from scripts.initialization import InitializeState
+from frontend.initialization import InitializeState
 
 
 InitializeState(st.session_state)
@@ -22,7 +22,7 @@ introduction.title(PAGE_TITLE[wt.LABEL.value])
 introduction.info(PAGE_MAJOR_INFO[wt.LABEL.value])
 
 
-# 上传 Notebook
+# 上传 Notebook 的组件
 nb_uploader = st.container()
 file = nb_uploader.file_uploader(NOTEBOOK_UPLOADER[wt.LABEL.value], 
                                  type=".ipynb",
