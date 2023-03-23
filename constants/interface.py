@@ -135,7 +135,7 @@ DISPLAYED_TEXT_WHEN_INIT_TRANSLATING = {
 
 DISPLAYED_TEXT_WHEN_COMPUTING_MD_META = {
     WidgetText.LABEL.value:"计算当前文件的 Markdown 大小",
-    WidgetText.SUCCESS.value:"当前文件共有 {markdown_counts} 个 Markdown cell, 总计 {line_counts} 行文本", 
+    WidgetText.SUCCESS.value:"当前文件共有 {line_counts} 行文本", 
 }
 
 
