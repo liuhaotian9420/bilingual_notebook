@@ -39,47 +39,47 @@ else:
     source_language= 'english'
     target_language= 'simplified chinese'
 
-add_glossary = st.container()
+# add_glossary = st.container()
 
-if add_glossary.checkbox(ADD_GLOSSARY_SHOW_BUTTON[wt.LABEL.value]) and model == 'deepl':
+# if add_glossary.checkbox(ADD_GLOSSARY_SHOW_BUTTON[wt.LABEL.value]) and model == 'deepl':
 
-    glossary_utils = st.container()
-    uploader, downloader = glossary_utils.columns([4,1])
-    _ = uploader.write('上传自定义字典(.txt)')
+#     glossary_utils = st.container()
+#     uploader, downloader = glossary_utils.columns([4,1])
+#     _ = uploader.write('上传自定义字典(.txt)')
 
-    glossary_file = uploader.file_uploader(GLOSSARY_UPLOADER[wt.LABEL.value],type=".txt"
-                                           ,help=GLOSSARY_UPLOADER[wt.HELP.value]
-                                           ,label_visibility='collapsed'
-                                           )
-    _ = downloader.write('下载')
-    glossary_template = downloader.download_button(GLOSSARY_TEMPLATE_DOWNLOAD_BUTTON[wt.LABEL.value],
-                                                     data = 'hello,zh,你好\n世界,en,world\n',
-                                                     file_name = 'glossary_template.txt',
-                                                     use_container_width  = True
-                                                     )
-    # _ = downloader.write('something')
-    glossary_full = downloader.download_button(GLOSSARY_FULL_DOWNLOAD_BUTTON[wt.LABEL.value],
-                                               data = '',
-                                               file_name = 'glossary.txt',
-                                               use_container_width=True
-                                               )
+#     glossary_file = uploader.file_uploader(GLOSSARY_UPLOADER[wt.LABEL.value],type=".txt"
+#                                            ,help=GLOSSARY_UPLOADER[wt.HELP.value]
+#                                            ,label_visibility='collapsed'
+#                                            )
+#     _ = downloader.write('下载')
+#     glossary_template = downloader.download_button(GLOSSARY_TEMPLATE_DOWNLOAD_BUTTON[wt.LABEL.value],
+#                                                      data = 'hello,zh,你好\n世界,en,world\n',
+#                                                      file_name = 'glossary_template.txt',
+#                                                      use_container_width  = True
+#                                                      )
+#     # _ = downloader.write('something')
+#     glossary_full = downloader.download_button(GLOSSARY_FULL_DOWNLOAD_BUTTON[wt.LABEL.value],
+#                                                data = '',
+#                                                file_name = 'glossary.txt',
+#                                                use_container_width=True
+#                                                )
     
-    glossary_search = glossary_utils.text_input(GLOSSARY_SEARCH_INPUT [wt.LABEL.value],
-                                              type='default',
-                                              help=GLOSSARY_SEARCH_INPUT[wt.HELP.value],
-                                              placeholder=GLOSSARY_SEARCH_INPUT[wt.EXAMPLE.value])
-    if glossary_search:
+#     glossary_search = glossary_utils.text_input(GLOSSARY_SEARCH_INPUT [wt.LABEL.value],
+#                                               type='default',
+#                                               help=GLOSSARY_SEARCH_INPUT[wt.HELP.value],
+#                                               placeholder=GLOSSARY_SEARCH_INPUT[wt.EXAMPLE.value])
+#     if glossary_search:
         
-        with st.spinner('Searching...'):
+#         with st.spinner('Searching...'):
             
-            time.sleep(1)
-            # do some searching
+#             time.sleep(1)
+#             # do some searching
 
 
 
-    if glossary_file:
-        with open(glossary_file.name) as f:
-            glossary = f.read()
+#     if glossary_file:
+#         with open(glossary_file.name) as f:
+#             glossary = f.read()
     
 
 
