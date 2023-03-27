@@ -1,6 +1,5 @@
 import streamlit as st
 import time
-
 from scripts.constants.constants import *
 from constants.interface import WidgetText as wt
 from apps.main import get_model,markdown_line_translate
@@ -15,7 +14,11 @@ def TranslationProgressing(model,notebook,progress_bar):
 
     for idx, md in notebook.get_markdown():
 
-        notebook.set_cell((idx, markdown_line_translate(md['source'],model)))
+        progress_bar.progress(
+                              counter+1, 
+                              text= TRANSLATE_PROGRESS_BAR[wt.LOG.value].format(lines_translated=str(int((counter+1)/notebook.line_counter*100))))
+        
+        notebook.set_cell((idx, markdown_line_translate(md['source'],model,)))
 
         counter+= len(md['source'])
         
@@ -36,7 +39,6 @@ def UploadNotebook(session_state,wid:str):
     wid: string, 当前 widget 的id
     '''
     current_status = session_state.get('notebook_upload_status') 
-    st.write(session_state.get('notebook_upload_status'))
 
     if not session_state[wid] and current_status is not None:
 
@@ -45,7 +47,7 @@ def UploadNotebook(session_state,wid:str):
         return
 
 
-    if (current_status is not None) and (current_status == UploadStatus.EXISITING.value):
+    if (current_status is not None) and (current_status == UploadStatus.EXISITING.value) and session_state[wid]:
         
         st.error(NOTEBOOK_UPLOAD_STATUS[wt.WARNING.value]+': '+session_state[wid].name)
         
@@ -60,7 +62,6 @@ def UploadNotebook(session_state,wid:str):
         session_state['notebook_upload_status'] = UploadStatus.EXISITING.value
          
         session_state['notebook'] = nb
-        st.write(session_state['notebook_upload_status'])
 
     except:
     
@@ -68,8 +69,6 @@ def UploadNotebook(session_state,wid:str):
        st.error(NOTEBOOK_UPLOAD_STATUS[wt.ERROR.value]+': '+session_state[wid].name)
 
 def ModelSelection(session_state, wid):
-
-    st.write('FLAG: IN CALLBACKS')
 
     if session_state[wid]:
 
@@ -102,25 +101,6 @@ def LanguageSelection(session_state, wid, is_source=True):
 
         session_state['target_language'] = session_state[wid].strip()
         session_state['target_language_select_status'] == SelectionStatus.CHANGED.value
-
-    # return session_state
-
-# def GetTranslatorModel(session_state,model_name,key,source_language,target_language):
-
-#     assert session_state['api_key_input_status'] == InputStatus.EXISTING.value
-#     assert session_state['source_language_status'] == SelectionStatus.SELECTED.value
-#     assert session_state['target_language_status'] == SelectionStatus.SELECTED.value
-#     assert session_state['model'] is not None
-
-#     if model_name == 'gpt-3.5':
-
-#         return GPT3(key, source_language, target_language,)
-
-#     if model_name == 'deepl':
-
-#         return DeepL(key, source_language, target_language,)
-
-
 
 
 def ClickTranslate(session_state,logger,progress):
@@ -188,8 +168,6 @@ def ClickTranslate(session_state,logger,progress):
     
     session_state.activate_download_button = True
     session_state.runs = True
-    # st.write('FLAG:IN CALLBACKS')
-    # st.write('Exiting the translating button: ',st.session_state['activate_download_button'])
     session_state.cached_results = notebook
     
 

@@ -50,24 +50,29 @@ class Notebook():
         else:
             
             nb_json = json.loads(ipynb)
+        
 
         # check if ipynb file contains cells
-        assert 'cells' in nb_json.keys(), 'No cells found in notebook'
+        try:
+            _ ='cells' in nb_json.keys()
+
+        except Exception as e:
+
+            raise('NotebookLoadingError:No cells found in notebook')
 
 
         content  = self._get_content()
 
+        # 遍历 Notebook cells 
+
         for idx,cell in enumerate(nb_json['cells']):
 
-            if cell['cell_type'] == 'markdown':
-                
-                self.line_counter +=  len(cell['source'])
 
-            content[cell['cell_type']].append((idx,cell))
+            self._process_cells(idx,cell)
             
+        
+        # store original content for later reconstruction
         self.cells = nb_json['cells']
-
-        # update meta of notebook
         self.meta = nb_json['metadata'] 
     
 
@@ -84,6 +89,8 @@ class Notebook():
     def get_code(self):
 
         return self.content['code']
+    
+
         
     def set_cell(self, cell):
         '''
@@ -106,3 +113,30 @@ class Notebook():
         nb['nbformat_minor']=0
 
         return nb
+    
+    
+    def _process_cells(self,idx,cell):
+
+        if cell['cell_type']=='markdown':
+
+            try:
+                cell['source'] = self.formalize(cell['source'])
+            except AttributeError as e:
+                pass
+            finally:
+                self.line_counter += len(cell['source'])
+        
+        self.content[cell['cell_type']].append((idx,cell))    
+    
+    @staticmethod
+    def formalize(md:str):
+        
+        md_lines = [m+'\n' for m in md.split('\n')]
+
+        return md_lines
+
+
+    
+    
+
+            

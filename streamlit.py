@@ -72,18 +72,18 @@ if more_options.checkbox(MORE_OPTIONS_SHOW_BUTTON[wt.LABEL.value]):
                                             kwargs={'is_source':False}
                                             ).lower()
     
+
+buttons = st.container()
+translate, download = buttons.columns(2)
+dummy = download.empty()
+w1,w2 = translate.columns([2,1])
+
 # Logging
 logging = st.container()
 logging.empty()
 # 进度条
 progress = st.container()
 progress.empty()
-
-
-buttons = st.container()
-translate, download = buttons.columns(2)
-dummy = download.empty()
-w1,w2 = translate.columns([2,1])
 
 
 # 下载按钮

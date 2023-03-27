@@ -21,9 +21,12 @@ def tag_mask(md:str):
 
     return re.sub(compilers['code'],pop_code,md)
 
-def markdown_line_translate(md:list[str],model):
+def markdown_line_translate(md:list[str],model,):
 
     bilingual_mds = []
+
+    # if not session_state.get('line_counter'):
+    #     session_state['line_counter'] = 0
 
     for m in tqdm(md):
 
@@ -57,11 +60,7 @@ def markdown_line_translate(md:list[str],model):
                                  + '\n\n')
         else:
 
-            # print('FLAG PRINT SINGLE MARKDOWN:',m)
-
             ttext = re.sub('<x>|</x>','`',model.translate(tag_mask(m)))
-
-            # print('FLAG PRINT SINGLE TEXT:',ttext)
 
             if ttext != m:
                 bilingual_mds.append(m+'\n'+ttext+'\n')
@@ -69,32 +68,5 @@ def markdown_line_translate(md:list[str],model):
                 bilingual_mds.append(m+'\n')
                 
     return bilingual_mds
-
-# def translate_notebook(notebook,key,model_name,source_language,target_language):
-
-#     translator_model = get_model(model_name,key,source_language,target_language)
-
-#     nb = Notebook().loads(notebook)
-
-#     markdowns = notebook.get_markdown()
-
-#     for idx, md in markdowns:
-
-#         # print(md)
-        
-#         notebook.set_cell((idx, markdown_line_translate(md['source'],translator_model)))
-
-#     # print('translated markdowns finished,original markdowns:\n')
-#     # print(markdowns)
-#     # print('new markdowns:\n')
-#     # print(translated_markdowns)
-
-#     print('Finished markdowns')
-
-#     return notebook.reconstruct()
-     
-
-# def rebuild_notebook(notebook):
-# return
         
 
