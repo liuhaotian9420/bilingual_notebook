@@ -48,6 +48,7 @@ model = translator_model.selectbox(
 # 输入API-Key
 key = key_input.text_input(API_KEY_INPUT_BOX[wt.LABEL.value].format(translator_model=model),
                              key=API_KEY_INPUT_BOX[wt.ID.value],
+                             help=API_KEY_INPUT_BOX[wt.HELP.value][model],
                              type='password',
                              on_change=APIKeyInput,
                              args=(st.session_state,API_KEY_INPUT_BOX[wt.ID.value],),)
@@ -72,6 +73,10 @@ if more_options.checkbox(MORE_OPTIONS_SHOW_BUTTON[wt.LABEL.value]):
                                             kwargs={'is_source':False}
                                             ).lower()
     
+else:
+
+    target_language = 'simplified chinese'
+    source_language = 'english'
 
 buttons = st.container()
 translate, download = buttons.columns(2)
@@ -87,7 +92,7 @@ progress.empty()
 
 
 # 下载按钮
-if not st.session_state['activate_download_button']:
+if  not file or not st.session_state['cached_results']:
 
     dummy_download = dummy.download_button(DUMMY_DOWNLOAD_BUTTON[wt.LABEL.value],
                                 mime="application/ipynb",
@@ -102,16 +107,38 @@ translate_button = w2.button(
                              args=(st.session_state,logging,progress,),
                              )
 
-if translate_button and st.session_state['runs']:
+if file:
+    
+    file_name = '[{language_code}]'.format(language_code=TO_LANGUAGE_CODE.get(target_language))+file.name 
+
+else:
+    file_name = ''
+
+
+is_translation_finished = translate_button and st.session_state['runs']
+
+
+if st.session_state['cached_results'] and file:
     
     dummy.empty()
-    file_name = '[{language_code}]'.format(language_code=TO_LANGUAGE_CODE.get(target_language))+file.name
     active_download = download.download_button(key=ACTIVE_DOWNLOAD_BUTTON[wt.ID.value],
                                                label=ACTIVE_DOWNLOAD_BUTTON[wt.LABEL.value], 
                                                data=json.dumps(st.session_state['cached_results']), 
                                                file_name=file_name,                                                mime="application/ipynb",
                                                disabled=False,)
     nb_uploader.empty()
+
+# if st.session_state['activate_download_button'] and file and st.session_state['runs']:
+
+#     dummy.empty()
+#     active_download = download.download_button(key=ACTIVE_DOWNLOAD_BUTTON[wt.ID.value],
+#                                                label=ACTIVE_DOWNLOAD_BUTTON[wt.LABEL.value], 
+#                                                data=json.dumps(st.session_state['cached_results']), 
+#                                                file_name=file_name,                                                mime="application/ipynb",
+#                                                disabled=False,)
+#     nb_uploader.empty()
+#     st.session_state['activate_download_button'] = True 
+
 
 
 

@@ -60,8 +60,8 @@ def UploadNotebook(session_state,wid:str):
         nb = Notebook()
         nb.loads(nb_json)
         session_state['notebook_upload_status'] = UploadStatus.EXISITING.value
-         
         session_state['notebook'] = nb
+        session_state['cached_results'] = None
 
     except:
     
@@ -77,8 +77,6 @@ def ModelSelection(session_state, wid):
     else:
 
         session_state['model'] = 'deepl'
-
-    st.write(session_state['model'])
 
 
 def APIKeyInput(session_state, wid):
@@ -104,10 +102,6 @@ def LanguageSelection(session_state, wid, is_source=True):
 
 
 def ClickTranslate(session_state,logger,progress):
-
-    # st.write('Entering the translating button: ',st.session_state['activate_download_button'])
-
-    st.write(session_state['notebook_upload_status'])
 
     if session_state['notebook_upload_status'] != UploadStatus.EXISITING.value:
 

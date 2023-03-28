@@ -35,7 +35,11 @@ MODEL_SELECTION_BOX = {
 
 API_KEY_INPUT_BOX = {
     WidgetText.ID.value:"api_key_input_box",
-    WidgetText.LABEL.value: "输入你的 {translator_model} key"
+    WidgetText.LABEL.value: "输入你的 {translator_model} key",
+    WidgetText.HELP.value:{'deepl':"Key以'\:fx' 结尾",
+                           'gpt-3.5':"Key 以 'sk' 开头",
+                           }
+
 }
 
 SOURCE_LANGUAE_SELECTION_BOX = {
