@@ -14,6 +14,10 @@ InitializeState(st.session_state)
 # So all major blocks should be of container type
 
 ALL_LANGUAGES = [k.title() for k in list(TO_LANGUAGE_CODE.keys())]
+target_language = 'simplified chinese'
+source_language = 'english'
+model = 'deepl'
+
 
 ############################ UI ####################################
 
@@ -72,11 +76,7 @@ if more_options.checkbox(MORE_OPTIONS_SHOW_BUTTON[wt.LABEL.value]):
                                             args=(st.session_state,SOURCE_LANGUAE_SELECTION_BOX[wt.ID.value],),
                                             kwargs={'is_source':False}
                                             ).lower()
-    
-else:
 
-    target_language = 'simplified chinese'
-    source_language = 'english'
 
 buttons = st.container()
 translate, download = buttons.columns(2)
