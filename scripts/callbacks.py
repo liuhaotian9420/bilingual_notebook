@@ -4,7 +4,7 @@ from scripts.constants.constants import *
 from constants.interface import WidgetText as wt
 from apps.main import get_model,markdown_line_translate
 from apps.notebook import Notebook
-
+from random import random
 
 
 
@@ -14,19 +14,21 @@ def TranslationProgressing(model,notebook,progress_bar):
 
     for idx, md in notebook.get_markdown():
 
+        translated_pct = int((counter+random()*len(md['source']))/notebook.line_counter*100)
+
         progress_bar.progress(
-                              counter+1, 
-                              text= TRANSLATE_PROGRESS_BAR[wt.LOG.value].format(lines_translated=str(int((counter+1)/notebook.line_counter*100))))
+                              translated_pct, 
+                              text= TRANSLATE_PROGRESS_BAR[wt.LOG.value].format(lines_translated=str(translated_pct)))
         
         notebook.set_cell((idx, markdown_line_translate(md['source'],model,)))
 
         counter+= len(md['source'])
         
-        lines_translated = int(counter/notebook.line_counter*100)
+        translated_pct= int(counter/notebook.line_counter*100)
 
         progress_bar.progress(
-                              int(counter/notebook.line_counter*100), 
-                              text= TRANSLATE_PROGRESS_BAR[wt.LOG.value].format(lines_translated=str(lines_translated)))
+                              translated_pct, 
+                              text= TRANSLATE_PROGRESS_BAR[wt.LOG.value].format(lines_translated=str(translated_pct)))
     
     
     return notebook
