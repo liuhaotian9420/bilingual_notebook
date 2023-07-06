@@ -35,7 +35,11 @@ MODEL_SELECTION_BOX = {
 
 API_KEY_INPUT_BOX = {
     WidgetText.ID.value:"api_key_input_box",
-    WidgetText.LABEL.value: "输入你的 {translator_model} key"
+    WidgetText.LABEL.value: "输入你的 {translator_model} key",
+    WidgetText.HELP.value:{'deepl':"Key以'\:fx' 结尾",
+                           'gpt-3.5':"Key 以 'sk' 开头",
+                           }
+
 }
 
 SOURCE_LANGUAE_SELECTION_BOX = {
@@ -135,7 +139,7 @@ DISPLAYED_TEXT_WHEN_INIT_TRANSLATING = {
 
 DISPLAYED_TEXT_WHEN_COMPUTING_MD_META = {
     WidgetText.LABEL.value:"计算当前文件的 Markdown 大小",
-    WidgetText.SUCCESS.value:"当前文件共有 {markdown_counts} 个 Markdown cell, 总计 {line_counts} 行文本", 
+    WidgetText.SUCCESS.value:"当前文件共有 {line_counts} 行文本", 
 }
 
 

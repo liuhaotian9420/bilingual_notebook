@@ -20,7 +20,7 @@ compilers = {
     'value': re.compile(r'=.*'),
     'tabspace': re.compile(r'^[\s|\t]+\w*?'),
     'header':re.compile(r'(^#{1,6})\s(.*)'),
-    'bullets':re.compile(r'(\d+\.|-) (.*)'),
+    'bullets':re.compile(r'(^\d+\.|-) (.*)'),
     'code':re.compile(r'`'),
     }
 

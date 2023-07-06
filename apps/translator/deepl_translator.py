@@ -86,3 +86,11 @@ class DeepL(baseTranslator):
 
         t_text = response.text
         return t_text
+
+    def get_glossary_languages(self):
+
+        self.rotate_key()
+
+        translator = deepl.Translator(self.active_key)
+
+        return translator.get_glossary_languages()
