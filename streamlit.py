@@ -76,7 +76,6 @@ if more_options.checkbox(MORE_OPTIONS_SHOW_BUTTON[wt.LABEL.value]):
                                             args=(st.session_state,SOURCE_LANGUAE_SELECTION_BOX[wt.ID.value],),
                                             kwargs={'is_source':False}
                                             ).lower()
-=======
 else:
     source_language= 'english'
     target_language= 'simplified chinese'
